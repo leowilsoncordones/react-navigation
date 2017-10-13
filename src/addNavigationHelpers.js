@@ -13,6 +13,7 @@ import type {
 import NavigationActions from './NavigationActions';
 
 export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
+  let debounce = true;
   return {
     ...navigation,
     goBack: (key?: ?string): boolean => {
