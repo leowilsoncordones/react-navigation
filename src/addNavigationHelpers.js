@@ -15,24 +15,38 @@ import NavigationActions from './NavigationActions';
 export default function<S: *>(navigation: NavigationProp<S, NavigationAction>) {
   return {
     ...navigation,
-    goBack: (key?: ?string): boolean =>
-      navigation.dispatch(
-        NavigationActions.back({
-          key: key === undefined ? navigation.state.key : key,
-        })
-      ),
+    goBack: (key?: ?string): boolean => {
+      if(debounce){
+        debounce = false;
+        navigation.dispatch(
+          NavigationActions.back({
+            key: key === undefined ? navigation.state.key : key,
+          })
+        );
+        setTimeout(() => {
+              debounce = true;
+            }, 600);
+      }
+    },
     navigate: (
       routeName: string,
       params?: NavigationParams,
       action?: NavigationAction
-    ): boolean =>
+    ): boolean => {
+      if(debounce){
+      debounce = false;
       navigation.dispatch(
         NavigationActions.navigate({
           routeName,
           params,
           action,
         })
-      ),
+      );
+      setTimeout(() => {
+            debounce = true;
+          }, 600);
+    }
+    },
     /**
      * For updating current route params. For example the nav bar title and
      * buttons are based on the route params.
